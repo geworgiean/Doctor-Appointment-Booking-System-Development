@@ -24,20 +24,16 @@ export default function Sidebar({ role }: SidebarProps) {
   { name: 'Գլխավոր', href: '/dashboard/doctor', icon: HomeIcon },
   { name: 'Իմ այցելությունները', href: '/dashboard/doctor/appointments', icon: CalendarIcon },
   { name: 'Պացիենտներ', href: '/dashboard/doctor/patients', icon: UserGroupIcon },
-  { name: 'Պրոֆիլ', href: '/dashboard/doctor/profile', icon: UserIcon },
+  { name: 'Անձնական էջ', href: '/dashboard/doctor/profile', icon: UserIcon },
 ];
 
 const patientNav = [
     { name: 'Իմ էջը', href: '/dashboard/patient', icon: HomeIcon },
-    { name: 'Իմ հերթագրումները', href: '/dashboard/patient/appointments', icon: CalendarIcon },
     { name: 'Բժիշկների ցանկ', href: '/dashboard/patient/search', icon: ClipboardDocumentListIcon },
-    { name: 'Կարգավորումներ', href: '/dashboard/patient/settings', icon: UserIcon },
+    { name: 'Անձնական էջ', href: '/dashboard/patient/profile', icon: UserIcon },
   ];
 
   const navigation = role === "DOCTOR" ? doctorNav : patientNav;
-
-
-
 
   return (
     <div className="flex h-full w-64 flex-col bg-white border-r border-gray-200 shadow-sm">
@@ -48,20 +44,20 @@ const patientNav = [
           </span>
         </div>
         
-        <nav className="mt-2 flex-1 px-4 space-y-2">
+        <nav className="mt-2 flex-1 px-4 space-y-1">
           {navigation.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
                 key={item.name}
                 href={item.href}
-                className={`flex items-center px-4 py-3 text-sm font-semibold rounded-xl transition-all ${
+                className={`flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${
                   isActive 
-                    ? "bg-blue-600 text-white shadow-md shadow-blue-200" 
-                    : "text-gray-600 hover:bg-blue-50 hover:text-blue-600"
+                    ? "bg-blue-50 text-blue-700" 
+                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
                 }`}
               >
-                <item.icon className={`mr-3 h-5 w-5 ${isActive ? "text-white" : "text-gray-400"}`} />
+                <item.icon className={`mr-3 h-5 w-5 shrink-0 ${isActive ? "text-blue-600" : "text-gray-400"}`} />
                 {item.name}
               </Link>
             );
@@ -69,7 +65,7 @@ const patientNav = [
         </nav>
       </div>
 
-      <div className="p-4 border-t border-gray-100">
+      <div className="p-4 border-t border-gray-50 bg-gray-50/50">
         <SignOutButton />
       </div>
     </div>

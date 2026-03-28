@@ -9,6 +9,9 @@ import {
   UserGroupIcon, 
   CheckCircleIcon 
 } from "@heroicons/react/24/outline";
+import StatusButton from "@/components/StatusButton";
+
+
 
 export default async function DoctorDashboard() {
     const session = await auth();
@@ -40,18 +43,13 @@ export default async function DoctorDashboard() {
     return (
         <div className="min-h-screen bg-gray-50/50 p-4 md:p-8">
             <div className="max-w-6xl mx-auto">
-                {/* Header */}
                 <div className="mb-8 flex justify-between items-center">
                     <div>
                         <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Բժշկի կառավարման վահանակ</h1>
                         <p className="text-gray-500 mt-1">Բարի գալուստ, {session.user.name}: Ահա ձեր պլանավորված այցերը:</p>
                     </div>
-                    <button className="hidden md:block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-all shadow-md font-medium text-sm">
-                        + Նոր գրանցում
-                    </button>
                 </div>
 
-                {/* Stats Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
                     {stats.map((item) => (
                         <div key={item.name} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center space-x-4">
@@ -66,7 +64,6 @@ export default async function DoctorDashboard() {
                     ))}
                 </div>
 
-                {/* Main Content (Table) */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                     <div className="p-6 border-b border-gray-50 flex justify-between items-center">
                         <h2 className="text-lg font-bold text-gray-800">Առաջիկա այցելություններ</h2>
@@ -105,6 +102,12 @@ export default async function DoctorDashboard() {
                                                     <div>
                                                         <div className="font-bold text-gray-900">{app.patient.name}</div>
                                                         <div className="text-xs text-gray-400">{app.patient.email}</div>
+                                                    </div>
+                                                    <div className="flex items-center space-x-3">
+                                                        <span className="text-[10px] uppercase font-bold px-2 py-0.5 bg-blue-50 text-blue-600 rounded">
+                                                            {app.status}
+                                                        </span>
+                                                        <StatusButton appId={app.id} />
                                                     </div>
                                                 </div>
                                             </td>

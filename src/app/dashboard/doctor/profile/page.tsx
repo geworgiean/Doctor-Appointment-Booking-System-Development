@@ -8,7 +8,6 @@ import {
   UserGroupIcon, 
   ClockIcon 
 } from "@heroicons/react/24/outline";
-import SignOutButton from "@/components/SignOutButton";
 
 export default async function DoctorDashboard() {
   const session = await auth();
@@ -42,7 +41,6 @@ export default async function DoctorDashboard() {
       <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Բարի գալուստ, {session.user.name}</h1>
 
-        {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center space-x-4">
             <div className="bg-blue-100 p-3 rounded-xl text-blue-600">
@@ -65,7 +63,6 @@ export default async function DoctorDashboard() {
           </div>
         </div>
 
-        {/* Table Section */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="p-6 border-b border-gray-100 font-bold text-lg">
             Առաջիկա այցելություններ
@@ -103,10 +100,9 @@ export default async function DoctorDashboard() {
             {appointments.length === 0 && (
               <p className="p-10 text-center text-gray-500">Դեռևս այցելություններ չկան:</p>
             )}
-            <div className="shrink-0 flex border-t border-gray-200 p-4">
-              <SignOutButton />
-            </div>
+            
           </div>
+          
         </div>
       </div>
     </div>
