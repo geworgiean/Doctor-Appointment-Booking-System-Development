@@ -1,3 +1,5 @@
+"use client";
+
 import AuthLayout from "@/components/AuthLayout";
 import RegisterForm from "@/components/RegisterForm";
 import Link from "next/link";
