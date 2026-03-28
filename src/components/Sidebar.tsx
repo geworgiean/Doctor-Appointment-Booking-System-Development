@@ -4,14 +4,17 @@ import {
   CalendarIcon, 
   UserGroupIcon, 
   Cog6ToothIcon,
-  ArrowLeftOnRectangleIcon 
+  ArrowLeftOnRectangleIcon,
+  UserIcon
 } from "@heroicons/react/24/outline";
+import SignOutButton from "./SignOutButton";
 
 const navigation = [
   { name: 'Գլխավոր', href: '/dashboard/doctor', icon: HomeIcon },
   { name: 'Իմ այցելությունները', href: '/dashboard/doctor/appointments', icon: CalendarIcon },
   { name: 'Պացիենտներ', href: '/dashboard/doctor/patients', icon: UserGroupIcon },
   { name: 'Կարգավորումներ', href: '/dashboard/doctor/settings', icon: Cog6ToothIcon },
+  { name: 'Պրոֆիլ', href: '/dashboard/doctor/profile', icon: UserIcon },
 ];
 
 export default function Sidebar() {
@@ -34,12 +37,8 @@ export default function Sidebar() {
           ))}
         </nav>
       </div>
-      <div className="shrink-0 flex border-t border-gray-200 p-4">
-        <button className="flex items-center text-sm font-medium text-red-600 hover:text-red-700">
-          <ArrowLeftOnRectangleIcon className="mr-3 h-6 w-6" />
-          Դուրս գալ
-        </button>
-      </div>
+      
+      <SignOutButton />
     </div>
   );
 }
