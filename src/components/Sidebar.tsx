@@ -17,8 +17,8 @@ const navigation = [
 export default function Sidebar() {
   return (
     <div className="flex h-full w-64 flex-col bg-white border-r border-gray-200">
-      <div className="flex flex-col flex-grow pt-5 pb-4 overflow-y-auto">
-        <div className="flex items-center flex-shrink-0 px-4 mb-8">
+      <div className="flex flex-col grow pt-5 pb-4 overflow-y-auto">
+        <div className="flex items-center shrink-0 px-4 mb-8">
           <span className="text-2xl font-bold text-blue-600 italic">MedBooking</span>
         </div>
         <nav className="mt-5 flex-1 px-2 space-y-1">
@@ -34,7 +34,7 @@ export default function Sidebar() {
           ))}
         </nav>
       </div>
-      <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
+      <div className="shrink-0 flex border-t border-gray-200 p-4">
         <button className="flex items-center text-sm font-medium text-red-600 hover:text-red-700">
           <ArrowLeftOnRectangleIcon className="mr-3 h-6 w-6" />
           Դուրս գալ
