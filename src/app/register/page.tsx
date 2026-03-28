@@ -3,8 +3,9 @@
 import AuthLayout from "@/components/AuthLayout";
 import RegisterForm from "@/components/RegisterForm";
 import Link from "next/link";
-
+import { Suspense } from 'react'
 export const dynamic = "force-dynamic";
+
 export default function RegisterPage() {
   return (
     <AuthLayout 
@@ -12,7 +13,11 @@ export default function RegisterPage() {
       subtitle="Գրանցվեք և օգտագործեք հերթագրման MedBooking համակարգի բոլոր հնարավորությունները:"
     >
       <div className="space-y-6">
-        <RegisterForm />
+        <main>
+        <Suspense fallback={<div>Բեռնվում է...</div>}>
+          <RegisterForm />
+        </Suspense>
+      </main>
         <div className="text-center text-sm text-gray-600">
           Արդեն ունե՞ք հաշիվ:{" "}
           <Link href="/login" className="font-semibold text-blue-600 hover:text-blue-700">
@@ -23,3 +28,4 @@ export default function RegisterPage() {
     </AuthLayout>
   );
 }
+
