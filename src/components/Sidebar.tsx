@@ -29,7 +29,8 @@ export default function Sidebar({ role }: SidebarProps) {
 
 const patientNav = [
     { name: 'Իմ էջը', href: '/dashboard/patient', icon: HomeIcon },
-    { name: 'Բժիշկների ցանկ', href: '/dashboard/patient/search', icon: ClipboardDocumentListIcon },
+    { name: 'Բժիշկների ցանկ', href: '/dashboard/patient/doctors', icon: ClipboardDocumentListIcon },
+    { name: 'Իմ հերթագրումները', href: '/dashboard/patient/appointments', icon: CalendarIcon },
     { name: 'Անձնական էջ', href: '/dashboard/patient/profile', icon: UserIcon },
   ];
 

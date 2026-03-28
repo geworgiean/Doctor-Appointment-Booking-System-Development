@@ -104,9 +104,7 @@ export default async function DoctorDashboard() {
                                                         <div className="text-xs text-gray-400">{app.patient.email}</div>
                                                     </div>
                                                     <div className="flex items-center space-x-3">
-                                                        <span className="text-[10px] uppercase font-bold px-2 py-0.5 bg-blue-50 text-blue-600 rounded">
-                                                            {app.status}
-                                                        </span>
+                                                        
                                                         <StatusButton appId={app.id} />
                                                     </div>
                                                 </div>
@@ -125,7 +123,7 @@ export default async function DoctorDashboard() {
                                             </td>
                                             <td className="px-6 py-5 text-sm">
                                                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                    Հաստատված
+                                                    {app.status}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-5 text-right space-x-2">

@@ -87,4 +87,5 @@ enum AppointmentStatus {
   CONFIRMED
   CANCELLED
   PENDING
+  COMPLETED
 }
