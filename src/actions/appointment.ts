@@ -48,8 +48,7 @@ export async function getAvailableSlots(doctorId: string, date: Date) {
 
 export async function bookAppointment(doctorId: string, patientId: string, appointmentDate: Date) {
     try {
-        const existingAppointment = await prisma.appointment.findFrist({
-            where: {
+          const existingAppointment = await prisma.appointment.findFirst({            where: {
                 doctorId: doctorId,
                 date:   appointmentDate,
                 status: { not: "CANCELLED" }
@@ -61,7 +60,7 @@ export async function bookAppointment(doctorId: string, patientId: string, appoi
         }
 
         await prisma.appointment.create({
-            date: {
+            data: {
                 doctorId,
                 patientId,
                 date: appointmentDate,
