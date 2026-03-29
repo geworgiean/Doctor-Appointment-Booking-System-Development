@@ -10,12 +10,13 @@ import { redirect } from "next/navigation";
 export default async function DashboardPage() {
   const session = await auth();
 
+/*
   if (session?.user.role === "DOCTOR") {
-  redirect("/dashboard/doctor");
-} else if (session?.user.role === "ADMIN") {
-  redirect("/dashboard/admin");
-}
-
+    redirect("/dashboard/doctor");
+  } else if (session?.user.role === "ADMIN") {
+    redirect("/dashboard/admin");
+  }
+  */
   return (
     <div className="min-h-screen bg-linear-to-b from-blue-50 to-white flex flex-col items-center justify-center p-6">
       <div className="text-center mb-12">
