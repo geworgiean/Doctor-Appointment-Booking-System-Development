@@ -9,38 +9,31 @@ export async function updateDoctorProfile(userId: string, formData: FormData) {
   const specialty = formData.get("specialty") as string;
   const bio = formData.get("bio") as string;
   const diplomaUrl = formData.get("diplomaUrl") as string;
+  
   const session = await auth();
 
-  if (!session || !session.user) {
+  if (!session?.user?.id) {
     return { error: "Դուք պետք է մուտք գործեք համակարգ:" };
   }
 
-  const isOwner = session.user.id === userId;
   const isAdmin = session.user.role === "ADMIN";
-
-  if (!isOwner && !isAdmin) {
-    return { error: "Դուք իրավունք չունեք կատարել այս գործողությունը:" };
-  }
-
-  if (!userId) {
-    return { error: "User ID-ն բացակայում է:" };
-  }
+  const targetUserId = isAdmin ? userId : session.user.id; 
 
   try {
     await prisma.user.update({
-      where: { id: userId },
+      where: { id: targetUserId },
       data: { name: name },
     });
 
     await prisma.doctorProfile.upsert({
-      where: { userId: userId },
+      where: { userId: targetUserId },
       update: {
         specialty: specialty,
         bio: bio,
         diplomaUrl: diplomaUrl,
       },
       create: {
-        userId: userId,
+        userId: targetUserId,
         specialty: specialty || "",
         bio: bio || "",
         diplomaUrl: diplomaUrl || "",
