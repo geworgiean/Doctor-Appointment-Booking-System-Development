@@ -6,11 +6,53 @@ generator client {
   provider = "prisma-client-js"
 }
 
-
 enum Role {
   DOCTOR
   PATIENT
   ADMIN
+}
+
+enum AppointmentStatus {
+  CONFIRMED
+  CANCELLED
+  PENDING
+  COMPLETED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String
+  
+  role          Role      @default(PATIENT) 
+  
+  accounts      Account[]
+  sessions      Session[]
+  
+  doctorProfile DoctorProfile?
+
+  appointments        Appointment[] @relation("PatientToAppointment")
+  doctorAppointments  Appointment[] @relation("DoctorToAppointment")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DoctorProfile {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  specialty    String?
+  bio          String?  @db.Text
+  diplomaUrl   String?  
+  isVerified   Boolean  @default(false)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Account {
@@ -40,34 +82,8 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  password      String
-  role          String    @default("PATIENT")
-  
-  accounts      Account[]
-  sessions      Session[]
-  
-  doctorProfile DoctorProfile?
-
-  appointments        Appointment[] @relation("PatientToAppointment")
-  doctorAppointments  Appointment[] @relation("DoctorToAppointment")
-}
-
-model DoctorProfile {
-  id         String  @id @default(cuid())
-  specialty  String?
-  bio        String?
-  userId     String  @unique
-  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
 model Appointment {
-  id        String            @id   @default(cuid())
+  id        String            @id @default(cuid())
   date      DateTime
   status    AppointmentStatus @default(CONFIRMED)
 
@@ -81,11 +97,4 @@ model Appointment {
   
   createdAt DateTime          @default(now())
   updatedAt DateTime          @updatedAt
-}
-
-enum AppointmentStatus {
-  CONFIRMED
-  CANCELLED
-  PENDING
-  COMPLETED
 }

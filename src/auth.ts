@@ -3,10 +3,14 @@ import { PrismaAdapter } from "@auth/prisma-adapter"
 import prisma from "./lib/prisma"
 import Credentials from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
+import { Role } from "@prisma/client"
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma),
+  adapter: PrismaAdapter(prisma) as any,
   session: { strategy: "jwt" },
+  pages: {
+    signIn: "/login",
+  },
   providers: [
     Credentials({
       name: "Credentials",
@@ -19,7 +23,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email as string },
-        }) as any
+        })
 
         if (!user || !user.password) return null
 
@@ -30,7 +34,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
         if (!isValid) return null
 
-        return user
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role, 
+        }
       },
     }),
   ],
@@ -47,12 +56,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       if (session.user) {
         session.user.id = token.id as string
         // @ts-ignore
-        session.user.role = token.role
+        session.user.role = token.role as Role
       }
       return session
     },
   },
-  pages: {
-    signIn: "/login",
-  },
-});
+})

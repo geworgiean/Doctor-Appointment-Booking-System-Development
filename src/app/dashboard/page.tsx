@@ -5,12 +5,19 @@ import {
   AcademicCapIcon 
 } from "@heroicons/react/24/outline";
 import { auth } from "@/auth";
-import {redirect} from "next/navigation";
+import { redirect } from "next/navigation";
 
-export default function HomePage() {
+export default async function DashboardPage() {
+  const session = await auth();
+
+  if (session?.user.role === "DOCTOR") {
+  redirect("/dashboard/doctor");
+} else if (session?.user.role === "ADMIN") {
+  redirect("/dashboard/admin");
+}
+
   return (
     <div className="min-h-screen bg-linear-to-b from-blue-50 to-white flex flex-col items-center justify-center p-6">
-      {/* Header */}
       <div className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
           MedBooking <span className="text-blue-600">Համակարգ</span>
@@ -21,10 +28,8 @@ export default function HomePage() {
         </p>
       </div>
 
-      {/* Selection Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full">
         
-        {/* Patient Card */}
         <div className="bg-white p-8 rounded-3xl shadow-xl border border-blue-100 hover:border-blue-300 transition-all transform hover:-translate-y-2 group">
           <div className="bg-blue-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors">
             <UserIcon className="h-8 w-8 text-blue-600 group-hover:text-white" />
@@ -43,7 +48,6 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Doctor Card */}
         <div className="bg-white p-8 rounded-3xl shadow-xl border border-green-100 hover:border-green-300 transition-all transform hover:-translate-y-2 group">
           <div className="bg-green-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-green-600 transition-colors">
             <AcademicCapIcon className="h-8 w-8 text-green-600 group-hover:text-white" />
@@ -64,7 +68,6 @@ export default function HomePage() {
 
       </div>
 
-      {/* Footer Info */}
       <div className="mt-16 text-gray-400 text-sm flex items-center">
         <UserPlusIcon className="h-5 w-5 mr-2" />
         Ավելի քան 1000+ բժիշկ և պացիենտ արդեն մեզ հետ են

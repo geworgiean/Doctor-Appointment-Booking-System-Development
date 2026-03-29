@@ -7,17 +7,21 @@ import {
   CalendarIcon, 
   ClockIcon, 
   UserGroupIcon, 
-  CheckCircleIcon 
+  CheckCircleIcon,
+  UserCircleIcon 
 } from "@heroicons/react/24/outline";
 import StatusButton from "@/components/StatusButton";
-
-
+import Link from "next/link";
 
 export default async function DoctorDashboard() {
     const session = await auth();
 
     if (!session?.user?.id) {
         redirect("/login");
+    }
+
+    if (session.user.role !== "DOCTOR") {
+        redirect("/dashboard");
     }
 
     const doctorId = session.user.id;
@@ -35,19 +39,45 @@ export default async function DoctorDashboard() {
     });
 
     const stats = [
-        { name: 'Այսօրվա այցեր', value: appointments.length, icon: CalendarIcon, color: 'text-blue-600', bg: 'bg-blue-100' },
-        { name: 'Պացիենտներ', value: new Set(appointments.map(a => a.patientId)).size, icon: UserGroupIcon, color: 'text-green-600', bg: 'bg-green-100' },
-        { name: 'Հաստատված', value: appointments.length, icon: CheckCircleIcon, color: 'text-purple-600', bg: 'bg-purple-100' },
+        { 
+            name: 'Այսօրվա այցեր', 
+            value: appointments.filter(app => new Date(app.date).toDateString() === new Date().toDateString()).length, 
+            icon: CalendarIcon, 
+            color: 'text-blue-600', 
+            bg: 'bg-blue-100' 
+        },
+        { 
+            name: 'Պացիենտներ', 
+            value: new Set(appointments.map(a => a.patientId)).size, 
+            icon: UserGroupIcon, 
+            color: 'text-green-600', 
+            bg: 'bg-green-100' 
+        },
+        { 
+            name: 'Հաստատված', 
+            value: appointments.length, 
+            icon: CheckCircleIcon, 
+            color: 'text-purple-600', 
+            bg: 'bg-purple-100' 
+        },
     ];
 
     return (
-        <div className="min-h-screen bg-gray-50/50 p-4 md:p-8">
+        <div className="min-h-screen bg-gray-50/50 p-4 md:p-8 text-black">
             <div className="max-w-6xl mx-auto">
-                <div className="mb-8 flex justify-between items-center">
+                <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
                         <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Բժշկի կառավարման վահանակ</h1>
                         <p className="text-gray-500 mt-1">Բարի գալուստ, {session.user.name}: Ահա ձեր պլանավորված այցերը:</p>
                     </div>
+
+                    <Link 
+                        href="/dashboard/doctor/profile" 
+                        className="flex items-center space-x-2 bg-white border border-gray-200 px-5 py-2.5 rounded-2xl shadow-sm hover:shadow-md hover:bg-gray-50 transition-all text-sm font-bold text-gray-700"
+                    >
+                        <UserCircleIcon className="h-5 w-5 text-blue-600" />
+                        <span>Իմ Պրոֆիլը</span>
+                    </Link>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
@@ -103,10 +133,6 @@ export default async function DoctorDashboard() {
                                                         <div className="font-bold text-gray-900">{app.patient.name}</div>
                                                         <div className="text-xs text-gray-400">{app.patient.email}</div>
                                                     </div>
-                                                    <div className="flex items-center space-x-3">
-                                                        
-                                                        <StatusButton appId={app.id} />
-                                                    </div>
                                                 </div>
                                             </td>
                                             <td className="px-6 py-5">
@@ -122,13 +148,13 @@ export default async function DoctorDashboard() {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-5 text-sm">
-                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                    {app.status}
-                                                </span>
+                                                <div className="flex items-center space-x-3">
+                                                    <StatusButton appId={app.id} />
+                                                </div>
                                             </td>
                                             <td className="px-6 py-5 text-right space-x-2">
-                                                <button className="text-gray-400 hover:text-blue-600 transition-colors">
-                                                   <span className="text-xs font-medium">Մանրամասն</span>
+                                                <button className="text-gray-400 hover:text-blue-600 transition-colors text-xs font-medium">
+                                                    Մանրամասն
                                                 </button>
                                                 <CancelButton id={app.id} />
                                             </td>

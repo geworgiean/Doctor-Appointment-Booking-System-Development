@@ -1,30 +1,46 @@
 "use server"
 
-import prisma from "../lib/prisma"
+import prisma from "@/lib/prisma"
 import bcrypt from "bcryptjs"
+import { Role } from "@prisma/client"
+import { revalidatePath } from "next/cache"
 
-export async function registerUser(formData: FormData) {
-  const name = formData.get("name") as string
-  const email = formData.get("email") as string
-  const password = formData.get("password") as string
-  const role = formData.get("role") as string 
-
-  if (!email || !password) return { error: "Լրացրեք բոլոր դաշտերը" }
+export const registerUser = async (formData: FormData) => {
+  const name = formData.get("name") as string;
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+  const roleInput = formData.get("role") as string || "PATIENT";
+  const role = roleInput as Role;
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 10)
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    await prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
-        role: (role as any) || "PATIENT",
-      }
-    })
-    return { success: true }
-  } catch (e: any) {
-    if (e.code === 'P2002') return { error: "Այս էլ. փոստը արդեն զբաղված է" }
-    return { error: "Սխալ տեղի ունեցավ գրանցման ժամանակ" }
+        role: role, 
+        ...(role === "DOCTOR" ? {
+          doctorProfile: {
+            create: {
+              specialty: "",
+              bio: "",
+              isVerified: false, 
+            }
+          }
+        } : {})
+      },
+    });
+
+    revalidatePath("/dashboard/admin");
+    
+    return { success: true };
+  } catch (error: any) {
+    if (error.code === 'P2002') {
+      return { error: "Այս էլ. հասցեն արդեն գրանցված է:" };
+    }
+    console.error("Registration Error:", error);
+    return { error: "Գրանցման սխալ տեղի ունեցավ:" };
   }
-}
+};
