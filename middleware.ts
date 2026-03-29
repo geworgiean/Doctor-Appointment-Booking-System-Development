@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
-import { NextResponse } from "next/server";
 import authConfig from "@/auth.config";
+import { NextResponse } from "next/server";
 
 const { auth } = NextAuth(authConfig);
 
@@ -8,20 +8,20 @@ export default auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
   const role = req.auth?.user?.role;
+  const pathname = nextUrl.pathname;
 
-  const isAdminRoute = nextUrl.pathname.startsWith("/dashboard/admin");
-  const isDoctorRoute = nextUrl.pathname.startsWith("/dashboard/doctor");
-
-  if (!isLoggedIn && (isAdminRoute || isDoctorRoute)) {
+  if (!isLoggedIn && pathname.startsWith("/dashboard")) {
     return NextResponse.redirect(new URL("/login", nextUrl));
   }
 
-  if (isAdminRoute && role !== "ADMIN") {
+  if (pathname.startsWith("/dashboard/admin") && role !== "ADMIN") {
     return NextResponse.redirect(new URL("/dashboard", nextUrl));
   }
 
-  if (isDoctorRoute && role !== "DOCTOR" && role !== "ADMIN") {
-    return NextResponse.redirect(new URL("/dashboard", nextUrl));
+  if (pathname.startsWith("/dashboard/doctor")) {
+    if (role !== "DOCTOR" && role !== "ADMIN") {
+      return NextResponse.redirect(new URL("/dashboard", nextUrl));
+    }
   }
 
   return NextResponse.next();
