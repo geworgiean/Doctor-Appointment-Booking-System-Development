@@ -1,17 +1,30 @@
+import { auth } from "@/auth";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 
-export function middleware(request: NextRequest) {
-  const session = request.cookies.get("authjs.session-token") || 
-                  request.cookies.get("__Secure-authjs.session-token");
+export default auth((req) => {
+  const { nextUrl } = req;
+  const isLoggedIn = !!req.auth;
+  const role = req.auth?.user?.role;
 
-  if (!session && (request.nextUrl.pathname.startsWith('/dashboard') || request.nextUrl.pathname.startsWith('/appointments'))) {
-    return NextResponse.redirect(new URL('/login', request.url));
+  const isAdminRoute = nextUrl.pathname.startsWith("/dashboard/admin");
+  const isDoctorRoute = nextUrl.pathname.startsWith("/dashboard/doctor");
+  const isAuthRoute = nextUrl.pathname.startsWith("/login") || nextUrl.pathname.startsWith("/register");
+
+  if (!isLoggedIn && (isAdminRoute || isDoctorRoute)) {
+    return NextResponse.redirect(new URL("/login", nextUrl));
+  }
+
+  if (isAdminRoute && role !== "ADMIN") {
+    return NextResponse.redirect(new URL("/dashboard", nextUrl));
+  }
+
+  if (isDoctorRoute && role !== "DOCTOR" && role !== "ADMIN") {
+    return NextResponse.redirect(new URL("/dashboard", nextUrl));
   }
 
   return NextResponse.next();
-}
+});
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/appointments/:path*"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
