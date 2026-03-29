@@ -1,20 +1,17 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get("next-auth.session-token")?.value || 
-                request.cookies.get("__Secure-next-auth.session-token")?.value;
+  const session = request.cookies.get("authjs.session-token") || 
+                  request.cookies.get("__Secure-authjs.session-token");
 
-  const isProtected = request.nextUrl.pathname.startsWith('/dashboard') || 
-                      request.nextUrl.pathname.startsWith('/appointments');
-
-  if (isProtected && !token) {
-    return NextResponse.redirect(new URL('/login', request.url))
+  if (!session && (request.nextUrl.pathname.startsWith('/dashboard') || request.nextUrl.pathname.startsWith('/appointments'))) {
+    return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  return NextResponse.next()
+  return NextResponse.next();
 }
 
 export const config = {
   matcher: ["/dashboard/:path*", "/appointments/:path*"],
-}
+};
